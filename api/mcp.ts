@@ -3,6 +3,12 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createXhsMcpServer } from "../src/mcp.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  setCorsHeaders(res);
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
   if (req.method !== "POST") {
     res.setHeader("allow", "POST");
     return res.status(405).json({
@@ -39,4 +45,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await transport.close();
     await server.close();
   }
+}
+
+function setCorsHeaders(res: VercelResponse) {
+  res.setHeader("access-control-allow-origin", "*");
+  res.setHeader("access-control-allow-methods", "POST, OPTIONS");
+  res.setHeader(
+    "access-control-allow-headers",
+    [
+      "accept",
+      "authorization",
+      "content-type",
+      "last-event-id",
+      "mcp-protocol-version",
+      "mcp-session-id"
+    ].join(", ")
+  );
+  res.setHeader("access-control-expose-headers", "mcp-session-id");
 }

@@ -8,11 +8,19 @@ export function createXhsMcpServer() {
     version: "0.1.0"
   });
 
-  server.tool(
+  server.registerTool(
     "xhs_card",
-    "Read a Xiaohongshu note URL and return title, author, text, image URLs, metrics, and comments.",
     {
-      url: z.string().url()
+      title: "Read Xiaohongshu note",
+      description:
+        "Read a Xiaohongshu note URL and return title, author, text, image URLs, metrics, and comments.",
+      inputSchema: {
+        url: z.string().url()
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async ({ url }) => {
       const note = await readCard(url);
@@ -27,11 +35,18 @@ export function createXhsMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "xhs_images",
-    "Download Xiaohongshu image URLs and return base64 image payloads.",
     {
-      urls: z.array(z.string().url()).min(1).max(12)
+      title: "Download Xiaohongshu images",
+      description: "Download Xiaohongshu image URLs and return base64 image payloads.",
+      inputSchema: {
+        urls: z.array(z.string().url()).min(1).max(12)
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true
+      }
     },
     async ({ urls }) => {
       const images = await readImages(urls);

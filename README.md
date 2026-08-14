@@ -38,8 +38,10 @@ curl -X POST http://localhost:3000/api/xhs-card \
 ChatGPT 网页端需要远程 MCP server。Vercel 部署后，在 ChatGPT 的自定义 MCP 应用里填写：
 
 ```text
-https://你的-vercel-域名.vercel.app/api/mcp
+https://你的-vercel-域名.vercel.app/mcp
 ```
+
+`/mcp` 会被 Vercel 重写到真正的函数 `/api/mcp`，两个地址都可以用。ChatGPT 里请选择“无身份验证”；OAuth 需要额外实现 OAuth/OIDC 发现和授权流程，本项目默认不启用。
 
 这个服务目前不做账号鉴权，只建议自己私用；如果要公开给别人用，建议加 OAuth 或至少加一个访问 token。
 
