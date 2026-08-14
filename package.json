@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "vercel dev",
-    "mcp": "tsx src/mcp-server.ts",
+    "dev": "npx vercel dev",
+    "mcp": "npm run build && node dist/src/mcp-server.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -16,11 +16,9 @@
   "devDependencies": {
     "@types/node": "^22.13.14",
     "@vercel/node": "^5.3.7",
-    "tsx": "^4.20.3",
-    "typescript": "^5.9.2",
-    "vercel": "^44.7.3"
+    "typescript": "^5.9.2"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   }
 }
