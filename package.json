@@ -1,0 +1,26 @@
+{
+  "name": "xhs-link-reader",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "vercel dev",
+    "mcp": "tsx src/mcp-server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@vercel/node": "^5.3.7",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2",
+    "vercel": "^44.7.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
