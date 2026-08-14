@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { requireApiToken } from "../src/auth.js";
 import { fetchXhsImages } from "../src/xhs.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -6,6 +7,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader("allow", "POST");
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
+
+  if (!requireApiToken(req, res)) return;
 
   try {
     const urls = Array.isArray(req.body?.urls)

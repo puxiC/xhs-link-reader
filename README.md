@@ -31,6 +31,36 @@ curl -X POST http://localhost:3000/api/xhs-card \
 3. Framework 选择 `Other` 即可。
 4. 部署完成后，记录域名，例如 `https://xhs-link-reader.vercel.app`。
 
+## 访问保护
+
+如果 Vercel 没有设置 `XHS_API_TOKEN`，服务默认公开可用。
+
+建议在 Vercel 的项目设置里添加环境变量：
+
+```text
+XHS_API_TOKEN=一串很长的随机密码
+```
+
+设置后，所有 API 和 MCP 请求都需要带 token。支持三种方式：
+
+```text
+https://你的-vercel-域名.vercel.app/mcp?token=你的token
+Authorization: Bearer 你的token
+x-api-token: 你的token
+```
+
+ChatGPT 官方自定义 MCP 通常不能设置自定义请求头，所以用 URL token：
+
+```text
+https://你的-vercel-域名.vercel.app/mcp?token=你的token
+```
+
+Rikkahub 这类能设置请求头的客户端，可以用：
+
+```text
+Authorization: Bearer 你的token
+```
+
 ## MCP 用法
 
 ### ChatGPT Work / Chat
@@ -41,9 +71,13 @@ ChatGPT 网页端需要远程 MCP server。Vercel 部署后，在 ChatGPT 的自
 https://你的-vercel-域名.vercel.app/mcp
 ```
 
-`/mcp` 会被 Vercel 重写到真正的函数 `/api/mcp`，两个地址都可以用。ChatGPT 里请选择“无身份验证”；OAuth 需要额外实现 OAuth/OIDC 发现和授权流程，本项目默认不启用。
+如果设置了 `XHS_API_TOKEN`，填写：
 
-这个服务目前不做账号鉴权，只建议自己私用；如果要公开给别人用，建议加 OAuth 或至少加一个访问 token。
+```text
+https://你的-vercel-域名.vercel.app/mcp?token=你的token
+```
+
+`/mcp` 会被 Vercel 重写到真正的函数 `/api/mcp`，两个地址都可以用。ChatGPT 里请选择“无身份验证”；OAuth 需要额外实现 OAuth/OIDC 发现和授权流程，本项目默认不启用。
 
 ### 本地 stdio 客户端
 
@@ -57,9 +91,10 @@ npm run mcp
 
 ```bash
 XHS_API_BASE_URL=https://你的-vercel-域名.vercel.app
+XHS_API_TOKEN=你的token
 ```
 
-不设置也可以，本地 MCP 会直接抓取小红书页面。
+不设置 `XHS_API_BASE_URL` 也可以，本地 MCP 会直接抓取小红书页面。
 
 ## 注意
 

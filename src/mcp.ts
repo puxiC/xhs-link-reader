@@ -70,7 +70,7 @@ async function readCard(url: string) {
 
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/api/xhs-card`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: getInternalHeaders(),
     body: JSON.stringify({ url })
   });
   const payload = await response.json();
@@ -84,10 +84,18 @@ async function readImages(urls: string[]) {
 
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/api/xhs-images`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: getInternalHeaders(),
     body: JSON.stringify({ urls })
   });
   const payload = await response.json();
   if (!response.ok || !payload.ok) throw new Error(payload.error || "xhs-images failed");
   return payload.images;
+}
+
+function getInternalHeaders(): Record<string, string> {
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  if (process.env.XHS_API_TOKEN) {
+    headers.authorization = `Bearer ${process.env.XHS_API_TOKEN}`;
+  }
+  return headers;
 }

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { requireMcpToken } from "../src/auth.js";
 import { createXhsMcpServer } from "../src/mcp.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -20,6 +21,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       id: null
     });
   }
+
+  if (!requireMcpToken(req, res)) return;
 
   const server = createXhsMcpServer();
   const transport = new StreamableHTTPServerTransport({
@@ -58,7 +61,8 @@ function setCorsHeaders(res: VercelResponse) {
       "content-type",
       "last-event-id",
       "mcp-protocol-version",
-      "mcp-session-id"
+      "mcp-session-id",
+      "x-api-token"
     ].join(", ")
   );
   res.setHeader("access-control-expose-headers", "mcp-session-id");
